@@ -11,6 +11,9 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.datasets import load_wine, load_breast_cancer
 
+from sklearn.feature_selection import chi2, SelectKBest, SelectFromModel
+NUM_OF_FEAT = 6
+
 class Dataset:
     def __init__(self):
         self.target = []
@@ -31,7 +34,7 @@ def load_wdbc_data(filename):
 
     return data_set
 
-def main():
+def testDefaultSVM():
     t1_start = process_time_ns()
 
     data = load_wdbc_data('wdbc.data')
@@ -55,6 +58,41 @@ def main():
     t1_stop = process_time_ns() 
 
     print("Elapsed time during the whole program in seconds:", (t1_stop-t1_start)/100000000) 
+
+def testFeatureSelectionSVM():
+    t1_start = process_time_ns()
+
+    data = load_wdbc_data('wdbc.data')
+
+    X_new = SelectKBest(chi2, k=NUM_OF_FEAT).fit_transform(data.data, data.target)
+
+    # get features and labels
+    dataset = pd.DataFrame(X_new)
+    labels = pd.Series(data.target)
+
+    print(dataset)
+
+    # prepare model
+    model = svm.SVC(kernel='rbf')
+    X_train, X_test, Y_train, Y_test = train_test_split(dataset, 
+                labels, test_size=0.15, stratify=labels)
+
+    # predict
+    model.fit(X_train, Y_train)
+    Y_pred = model.predict(X_test)
+    score = accuracy_score(Y_test, Y_pred)
+    print("score:")
+    print(score)
+
+    t1_stop = process_time_ns() 
+
+    print("Elapsed time during the whole program in seconds:", (t1_stop-t1_start)/100000000) 
+
+def main():
+    print("======= testDefaultSVM =======")
+    testDefaultSVM()
+    print("======= testFeatureSelectionSVM =======")
+    testFeatureSelectionSVM()
     
 if __name__ == "__main__":
     main()
