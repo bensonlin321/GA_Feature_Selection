@@ -10,8 +10,11 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 import os
 from sklearn.datasets import load_wine, load_breast_cancer
 
-TOTAL_TIMES = 1
-MAX_NUM_OF_GEN = 100
+MAX_NUM_OF_GEN  = 100
+POPULATION_SIZE = 200
+MUTATION_RATE   = 0.2
+TEST_SIZE       = 0.15
+RANDOM_STATE    = 42
 
 class Dataset:
     def __init__(self):
@@ -46,7 +49,7 @@ def sort_func(obj):
   return obj.fitness
 
 def main():
-    test_combination = [(200, 0.2)]
+    test_combination = [(POPULATION_SIZE, MUTATION_RATE)]
     #dataset, labels = get_config(FEATURE_ENVY)
     data = load_wdbc_data('wdbc.data')
     dataset = data.data
@@ -64,9 +67,7 @@ def main():
         start_time = time.time()
 
         cnt = 0
-        test_size = 0.15
-        random_state = 42
-        pop = Population(dataset, labels, pop_size, mutation_rate, model, test_size, random_state)
+        pop = Population(dataset, labels, pop_size, mutation_rate, model, TEST_SIZE, RANDOM_STATE)
         pop.evaluate()
 
         while not pop.finished and cnt < MAX_NUM_OF_GEN:
