@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn import preprocessing
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, f1_score, precision_recall_fscore_support
 #np.set_printoptions(threshold=np.inf)
 #pd.set_option("display.max_rows", None, "display.max_columns", None)
 
@@ -30,6 +30,7 @@ class Individual:
         self.test_size = test_size
         self.random_state = random_state
         self.genes = self.generate_random_genes()
+        self.test_res_set = None
 
     # Fitness function: returns a floating points of "correct" characters
     def calc_fitness(self):
@@ -52,8 +53,10 @@ class Individual:
         self.model.fit(self.X_train_, self.Y_train)
         Y_pred = self.model.predict(self.X_test_)
         score = accuracy_score(self.Y_test, Y_pred)
+        test_res_set = precision_recall_fscore_support(self.Y_test, Y_pred, average='binary')
 
         self.fitness = score
+        self.test_res_set = test_res_set
 
 
     #def __repr__(self):

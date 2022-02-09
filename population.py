@@ -39,6 +39,12 @@ class Population:
         print("Best individual: " + str(self.best_ind.genes))
         print("Best individual fitness: " + str(self.best_ind.fitness))
         print("Worst individual fitness: " + str(self.worst_ind.fitness))
+        print("Best individual precision: " + str(self.best_ind.test_res_set[0]))
+        print("Worst individual precision: " + str(self.worst_ind.test_res_set[0]))
+        print("Best individual recall: " + str(self.best_ind.test_res_set[1]))
+        print("Worst individual recall: " + str(self.worst_ind.test_res_set[1]))
+        print("Best individual f1-score: " + str(self.best_ind.test_res_set[2]))
+        print("Worst individual f1-score: " + str(self.worst_ind.test_res_set[2]))
 
     def get_generations(self):
         return self.generations
